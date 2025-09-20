@@ -2,6 +2,9 @@
 storage: /verdaccio/storage/data
 plugins: /verdaccio/plugins
 
+# Listen on all interfaces
+listen: 0.0.0.0:4873
+
 # Package storage configuration
 packages:
   '@my-comp/*':
@@ -47,12 +50,8 @@ logs:
   - { type: stdout, format: pretty, level: info }
   - { type: file, path: /verdaccio/storage/audit.log, level: info }
 
-# HTTPS configuration
-https:
-  enable: true
-  key: /verdaccio/certs/private.key
-  cert: /verdaccio/certs/certificate.crt
-  ca: /verdaccio/certs/ca.crt
+# HTTP configuration (HTTPS disabled for initial setup)
+# To enable HTTPS later, uncomment the https section and add certificates
 
 # Middleware for audit logging
 middlewares:
