@@ -9,16 +9,26 @@ listen: 0.0.0.0:4873
 packages:
   '@my-comp/*':
     # Allow all authenticated users to read (install) the package
-    access: $authenticated
-    # Only the 'ci-user' can publish
-    publish: ci-user
+    access: $all
+    # Allow both ci-user and admin to publish
+    publish: ci-user admin
+    # Disable proxying to external registries
+    proxy: none
+
+  '@mycompany/*':
+    # Allow all authenticated users to read (install) the package
+    access: $all
+    # Allow both ci-user and admin to publish
+    publish: ci-user admin
     # Disable proxying to external registries
     proxy: none
 
   '**':
-    # Deny access to any other packages
-    access: none
-    publish: none
+    # Allow authenticated users to read any package
+    access: $all
+    # Allow both ci-user and admin to publish any package
+    publish: ci-user admin
+    # Disable proxying to external registries
     proxy: none
 
 # Authentication
