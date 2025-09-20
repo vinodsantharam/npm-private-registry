@@ -1,0 +1,60 @@
+# Storage configuration
+storage: /verdaccio/storage/data
+plugins: /verdaccio/plugins
+
+# Package storage configuration
+packages:
+  '@my-comp/*':
+    # Allow all authenticated users to read (install) the package
+    access: $authenticated
+    # Only the 'ci-user' can publish
+    publish: ci-user
+    # Disable proxying to external registries
+    proxy: none
+
+  '**':
+    # Deny access to any other packages
+    access: none
+    publish: none
+    proxy: none
+
+# Authentication
+auth:
+  htpasswd:
+    file: /verdaccio/conf/htpasswd
+    # Disable user registration (only admins can create accounts)
+    max_users: -1
+
+# Server settings
+server:
+  keepAliveTimeout: 60
+
+# Security settings
+security:
+  api:
+    jwt:
+      enabled: true
+      secret: ${JWT_SECRET}
+  web:
+    enable: true
+    title: MyComp Private NPM Registry
+
+# Uplinks (disable external registries)
+uplinks: {}
+
+# Logging configuration for audit logs
+logs:
+  - { type: stdout, format: pretty, level: info }
+  - { type: file, path: /verdaccio/storage/audit.log, level: info }
+
+# HTTPS configuration
+https:
+  enable: true
+  key: /verdaccio/certs/private.key
+  cert: /verdaccio/certs/certificate.crt
+  ca: /verdaccio/certs/ca.crt
+
+# Middleware for audit logging
+middlewares:
+  audit:
+    enabled: true
