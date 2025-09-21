@@ -2,20 +2,33 @@
 storage: /verdaccio/storage/data
 plugins: /verdaccio/plugins
 
+# Listen on all interfaces
+listen: 0.0.0.0:4873
+
 # Package storage configuration
 packages:
   '@my-comp/*':
     # Allow all authenticated users to read (install) the package
-    access: $authenticated
-    # Only the 'ci-user' can publish
-    publish: ci-user
+    access: $all
+    # Allow both ci-user and admin to publish
+    publish: ci-user admin
+    # Disable proxying to external registries
+    proxy: none
+
+  '@mycompany/*':
+    # Allow all authenticated users to read (install) the package
+    access: $all
+    # Allow both ci-user and admin to publish
+    publish: ci-user admin
     # Disable proxying to external registries
     proxy: none
 
   '**':
-    # Deny access to any other packages
-    access: none
-    publish: none
+    # Allow authenticated users to read any package
+    access: $all
+    # Allow both ci-user and admin to publish any package
+    publish: ci-user admin
+    # Disable proxying to external registries
     proxy: none
 
 # Authentication
@@ -47,12 +60,8 @@ logs:
   - { type: stdout, format: pretty, level: info }
   - { type: file, path: /verdaccio/storage/audit.log, level: info }
 
-# HTTPS configuration
-https:
-  enable: true
-  key: /verdaccio/certs/private.key
-  cert: /verdaccio/certs/certificate.crt
-  ca: /verdaccio/certs/ca.crt
+# HTTP configuration (HTTPS disabled for initial setup)
+# To enable HTTPS later, uncomment the https section and add certificates
 
 # Middleware for audit logging
 middlewares:
